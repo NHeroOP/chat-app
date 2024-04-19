@@ -4,10 +4,11 @@ export interface User extends Document {
   username: string,
   email: string,
   password: string,
+  profilePicture: string,
+  isAcceptingDm: boolean,
   verifyToken: string,
   verifyTokenExpiry: Date,
   isVerified: boolean,
-  isAcceptingDm: boolean,
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -26,6 +27,13 @@ const UserSchema: Schema<User> = new Schema({
     type: String,
     required: [true, "Email is required"]
   },
+  profilePicture: {
+    type: String,
+  },
+  isAcceptingDm: {
+    type: Boolean,
+    default: true,
+  },
   verifyToken: {
     type: String,
     required: [true, "VerifyToken is required"]
@@ -37,10 +45,6 @@ const UserSchema: Schema<User> = new Schema({
   isVerified: {
     type: Boolean,
     default: false,
-  },
-  isAcceptingDm: {
-    type: Boolean,
-    default: true,
   },
 })
 
