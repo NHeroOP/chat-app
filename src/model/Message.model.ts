@@ -1,19 +1,19 @@
 import { Document, Schema, model, models, Model, Types } from "mongoose";
 
 export interface Message extends Document {
-  roomId: Types.ObjectId,
-  senderId: Types.ObjectId,
+  room: Types.ObjectId,
+  sender: Types.ObjectId,
   body: string,
   file: string,
   createdAt: Date,
 }
 
 const MessageSchema: Schema<Message> = new Schema({
-  roomId: {
+  room: {
     type: Schema.Types.ObjectId,
     ref: "ChatRoom"
   },
-  senderId: {
+  sender: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
