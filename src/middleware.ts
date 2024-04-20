@@ -1,30 +1,29 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { auth, auth as middleware } from "./auth"
  
-export default middleware(async(req: NextRequest) => {
-  const session = await auth()
+export default middleware(async (req) => {
+  const isLoggedIn = !!req.auth
   const url = req.nextUrl
 
-  if(session && (
+  if(isLoggedIn && (
     url.pathname.startsWith("/login") ||
     url.pathname.startsWith("/signup") ||
-    url.pathname.startsWith("/verify") ||
-    url.pathname.startsWith("/")
+    url.pathname.startsWith("/verify")
   )) {
-    return NextResponse.redirect(new URL("/dashboard", req.url))
+    return NextResponse.redirect(new URL("/", req.url))
   }
 
-  if(!session && url.pathname.startsWith("/dashboard")) {
+  if(!isLoggedIn && url.pathname == "/") {
     return NextResponse.redirect(new URL("/login", req.url))
   }
 })
 
 export const config = {
   matcher: [
-    // "/login",
-    // "/signup",
-    // "/",
-    // "/dashboard/:path*",
-    // "/verify/:path*",
+    "/login",
+    "/signup",
+    "/",
+    "/dashboard/:path*",
+    "/verify/:path*",
   ]
 }
