@@ -48,6 +48,6 @@ const UserSchema: Schema<User> = new Schema({
   },
 })
 
-const UserModel = (models.User as Model<User>) || (model("User", UserSchema)<User>)
+const UserModel = (models?.User as Model<User>) || (model("User", UserSchema)<User>)
 
 export default UserModel
