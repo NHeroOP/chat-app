@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes'
 
 import { Search } from 'lucide-react'
 import MenuBar from '@/components/MenuBar'
+import axios from 'axios'
 
 
 export default function Home() {
@@ -20,7 +21,12 @@ export default function Home() {
     setTheme(darkModeQuery.matches ? 'dark' : 'light');
   }, []);
 
-
+  const handleCreateChat = async (e: any  ) => {
+    const res = await axios.post('/api/chatrooms/create');
+    console.log(res);
+    console.log('create chat');
+    
+  }
 
   return (
     <div className="flex h-screen">
@@ -45,6 +51,10 @@ export default function Home() {
           onClick={() => signOut()}
           className="bg-orange-500 py-2 px-3 rounded-lg font-bold"
         >Logout</button>  
+        <button 
+          className="bg-orange-500 py-2 px-3 rounded-lg font-bold"
+          onClick={handleCreateChat}
+        >Create Chat</button>  
       </section>
     </div>
   )
