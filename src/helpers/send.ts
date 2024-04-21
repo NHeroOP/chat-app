@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import EmailTemplate from '@/components/EmailTemplate';
 import resend from '@/lib/resend';
 import { ApiResponse } from '@/types/ApiResponse';
