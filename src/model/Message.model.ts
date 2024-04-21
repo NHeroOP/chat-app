@@ -11,11 +11,13 @@ export interface Message extends Document {
 const MessageSchema: Schema<Message> = new Schema({
   room: {
     type: Schema.Types.ObjectId,
-    ref: "ChatRoom"
+    ref: "ChatRoom",
+    required: [true, "Room is required"]
   },
   sender: {
     type: Schema.Types.ObjectId,
     ref: "User",
+    required: [true, "Sender is required"]
   },
   body: {
     type: String,
