@@ -11,12 +11,16 @@ export default async function sendEmail(
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'NHero <onboarding@resend.dev>',
+      from: 'NHero <send@nhero.tech>',
       to: email,
       subject: "NHero Chat App Verification Code",
       react: EmailTemplate({username, otp: verifyToken}),
     });
 
+    if (error) {
+      return {success: false, message: error.message}
+    }
+    
     return {success: true, message: "Verification email send successfully"}  
   } 
   catch (err) {
