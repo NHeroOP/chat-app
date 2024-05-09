@@ -5,6 +5,9 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 import { signIn } from "next-auth/react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -18,37 +21,47 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { ToastAction } from "@/components/ui/toast"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { loginSchema } from "@/schemas/loginSchema"
+import { Loader2 } from "lucide-react"
 
 
 export default function Login() {
   
   const [loading, setLoading] = useState(false)
-  const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
-  })
 
   const router = useRouter()
   const { toast } = useToast()
 
-  const handleInputChange = (e: any) => {
-    let name = e.target.name
-    let value = e.target.value
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
+  })
 
-    setCredentials(prev => ({...prev, [name]:value}))
-  }
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault()
+  const onSubmit = async(data: z.infer<typeof loginSchema>) => {
     setLoading(true)
 
     try {
-      const res = await signIn("credentials", {redirect: false ,...credentials})
+      const res = await signIn("credentials", {
+        redirect: false,
+        ...data
+      })
       console.log(res);
       
 
       if (!res?.error) {
-        router.push("/")
+        router.replace("/")
         toast({
           title: "Login Success!",
           description: "You have successfully logged in",
@@ -73,69 +86,68 @@ export default function Login() {
       })
     }
 
-    setCredentials({ email: "", password: "" })
     setLoading(false)
   }
 
   return (
     <section className="flex justify-center items-center h-screen bg-[#f1f1f1] dark:bg-[#212121]">
-      <form 
-        onSubmit={handleSubmit} 
-        className={`${loading && "cursor-not-allowed"}`} 
-      >
-        <Card className="mx-auto max-w-sm">
-          <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
-            <CardDescription>
-              Enter your email below to login to your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={credentials.email}
-                  onChange={handleInputChange}
-                  placeholder="name@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <Link href="#" className="ml-auto inline-block text-sm underline">
-                    Forgot your password?
-                  </Link>
-                </div>
-                <Input 
-                  id="password" 
-                  type="password"
-                  name="password"
-                  value={credentials.password}
-                  onChange={handleInputChange} 
-                  required 
-                />
-              </div>
-              <Button type="submit" disabled={loading} className="w-full flex gap-4">
-                Login {loading && <span className="loading loading-spinner loading-md" />}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Card className="mx-auto max-w-sm">
+            <CardHeader>
+              <CardTitle className="text-xl">Log In</CardTitle>
+              <CardDescription>
+                Enter your information to Login
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col justify-center">
+          
+              
+              <FormField
+                name="identifier"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="nhero@nhero.tech" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="password"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="*****" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" disabled={loading} className="mt-2">
+                {loading ? 
+                <>
+                  Loging In
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                </> : "Login"}
               </Button>
-              {/* <Button variant="outline" className="w-full">
-                Login with Google
-              </Button> */}
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/signup" className="underline">
-                Sign up
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </form>
+
+              <div className="mt-4 text-center text-sm">
+                Dont't have an account?{" "}
+                <Link href="/signup" className="underline">
+                  Sign up
+                </Link>
+              </div>
+                    
+            </CardContent>
+          </Card>
+        </form>
+      </Form>  
     </section>
   )
 }
