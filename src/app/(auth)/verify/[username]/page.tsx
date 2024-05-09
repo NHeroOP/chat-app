@@ -3,6 +3,9 @@
 import React, { useState } from 'react'
 import "./verify.css"
 
+import { useParams, useRouter } from 'next/navigation'
+import axios from 'axios'
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -11,12 +14,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
+
 import { useToast } from '@/components/ui/use-toast'
 import { ToastAction } from '@/components/ui/toast'
-import { useParams, useRouter } from 'next/navigation'
-import axios from 'axios'
+
 
 export default function Verify() {
   const [otp, setOtp] = useState("")
@@ -63,12 +71,6 @@ export default function Verify() {
   }
 
   return (
-    // <section className="flex justify-center items-center h-screen bg-[#f1f1f1] dark:bg-[#212121]" >
-    //   <div>
-    //     <h1>Verify</h1>
-    //     <Input placeholder="Enter your code" value={otp} onChange={(e) => setOtp(e.target.value)}/>
-    //   </div>
-    // </section>
 
     <section className="flex justify-center items-center h-screen bg-[#f1f1f1] dark:bg-[#212121]">
       <form onSubmit={handleSubmit} className={`${loading && "cursor-not-allowed"}`}>
@@ -81,22 +83,27 @@ export default function Verify() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
-              <div className="grid gap-2 mb-6">
-                <Label htmlFor="otp">OTP</Label>
-                <Input 
-                  id="otp"
-                  name="otp"
-                  type="number"
-                  inputMode="numeric"
-                  placeholder="Enter your code" 
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)} 
-                  maxLength={6}
-                  minLength={6}
-                  disabled={loading}
-                  required
-                />
-              </div>
+              <InputOTP 
+                maxLength={6} 
+                placeholder="Enter your code" 
+                value={otp} 
+                onChange={(value) => setOtp(value)} 
+                disabled={loading}
+                required
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+
               <Button type="submit" disabled={loading} className="w-full flex gap-4">
                 Verify Email {loading && <span className="loading loading-spinner loading-md" />}
               </Button>
