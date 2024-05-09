@@ -13,6 +13,8 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar"
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import DialogBar from './DialogBar'
+import { DialogTrigger } from './ui/dialog'
 
 
 export default function MenuBar() {
@@ -24,11 +26,12 @@ export default function MenuBar() {
   };
 
   return (
-    <Menubar className="border-0 p-0 flex">
+    <Menubar className="border-0 p-0 flex font-normal">
+      
       <MenubarMenu>
         <MenubarTrigger className="p-0"><Menu size={36} className='dark:text-white text-black'/></MenubarTrigger>
         <MenubarContent className="p-0">
-          <MenubarItem className="flex gap-[10px] pr-[16px] pl-[10px] py-[10px] text-[24px] leading-[24px] h-[56px]">
+          <MenubarItem className="flex gap-[10px] pr-[16px] pl-[10px] py-[10px] text-[24px] leading-[24px] h-[56px] font-medium">
             <Avatar>
               <AvatarImage src="https://ui-avatars.com/api/?name=NHero&background=random" />
               <AvatarFallback>NH</AvatarFallback>
@@ -38,9 +41,15 @@ export default function MenuBar() {
           <MenubarItem className="flex gap-4 p-4 text-[20px] leading-[24px] h-[56px]">
             <AtSign /> Mentions 
           </MenubarItem>
-          <MenubarItem className="flex gap-4 p-4 text-[20px] leading-[24px] h-[56px]">
+          <DialogBar>
+            
+            <button><MenubarItem onClick={(e) => e.preventDefault()} >Test</MenubarItem></button>
+          {/* <MenubarItem className="flex gap-4 p-4 text-[20px] leading-[24px] h-[56px]" onClick={(e) => {
+            e.preventDefault();
+          }}>
             <Pencil /> {" "} New Direct Message
-          </MenubarItem>
+          </MenubarItem> */}
+          </DialogBar>
           <MenubarItem className="flex gap-4 p-4 text-[20px] leading-[24px] h-[56px]">
             <Users /> {" "} New Group
           </MenubarItem>
