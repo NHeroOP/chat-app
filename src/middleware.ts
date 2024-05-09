@@ -13,7 +13,7 @@ export default middleware(async (req) => {
     return NextResponse.redirect(new URL("/", req.url))
   }
 
-  if(!isLoggedIn && url.pathname == "/") {
+  if(!isLoggedIn && (url.pathname == "/" ||   url.pathname == "/chat")) {
     return NextResponse.redirect(new URL("/login", req.url))
   }
 })
@@ -25,5 +25,6 @@ export const config = {
     "/",
     "/dashboard/:path*",
     "/verify/:path*",
+    "/chat"
   ]
 }
