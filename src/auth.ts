@@ -17,7 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         await connectDB()
         
         try {
-          const user = await UserModel.findOne({email: credentials.email})
+          const user = await UserModel.findOne({email: credentials.identifier})
 
           if(!user) {
             throw new Error("User not found with this email")
