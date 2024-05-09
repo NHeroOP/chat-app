@@ -23,7 +23,6 @@ export async function POST(req:Request) {
 
   try {
     const data = await req.json()
-    
     const session = await auth()
 
     if(!session || !session.user){
@@ -33,18 +32,18 @@ export async function POST(req:Request) {
       }, { status: 401 })
     }
 
-    const userId = new Types.ObjectId(session?.user?._id)
-    if (data?.createdBy !== userId){
+    if (data?.createdBy !== session.user._id){
       return Response.json({
         success: false,
         message: "Unauthorized"
       }, { status: 401 })
     }
+    const userId = new Types.ObjectId(session?.user?._id)
 
     if (data?.users.length < 1) {
       return Response.json({
         success: false,
-        message: "Please add users to the chatroom"
+        message: "There are no users in the chatroom"
       }, { status: 400 })
     }
 
@@ -54,14 +53,14 @@ export async function POST(req:Request) {
       createdBy: userId,
       createdAt: new Date(),
     })
-    const savedChatRoom = await newChatRoom.save();
 
-    const newUserChatRooms = data?.users.map((user: string) => {
+    const newUserChatRooms = data?.users.map((user: string) => (
       new UserChatRoomModel({
         user: new Types.ObjectId(user),
-        room: savedChatRoom._id
+        room: newChatRoom._id
       })
-    })
+    ))
+    await newChatRoom.save()
 
     await Promise.all(newUserChatRooms.map((newUserChatRoom: UserChatRoom) => newUserChatRoom.save()));
     console.log("Chatroom created");
